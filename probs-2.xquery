@@ -9,7 +9,7 @@
     {
         let $list_of_successors := for $s in collection('xml_files?select=*.xml')//s
             return 
-               for $w in $s/w
+                for $w in $s/w
                     let $has-occurence := (lower-case(normalize-space($w/text())) eq 'has')
                     return
                         if($has-occurence)
@@ -24,9 +24,9 @@
         let $words := for $s in collection('xml_files?select=*.xml')//s
             return
                 for $w in $s/w
-                    return <word>{ (lower-case(normalize-space($w/text()))) }</word>
+                    return <word>{ lower-case(normalize-space($w/text()))  }</word>
                
-        let $probability := for $distinct-value in distinct-values($list_of_successors/text())
+        for $distinct-value in distinct-values($list_of_successors/text())
             let $freqs := count($list_of_successors[text() = $distinct-value])
             let $successor := (($list_of_successors[text() = $distinct-value])[1])
             let $column := tokenize($successor, ',')
@@ -39,10 +39,6 @@
                     <td>{$column[2]}</td>
                     <td>{$probability}</td>
                 </tr>
-            return
-                let $sub-items := subsequence($probability, 1, 20)
-                for $item in $sub-items
-                    return $item
      }
      
     </table>

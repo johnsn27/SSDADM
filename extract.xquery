@@ -9,8 +9,9 @@
         for $s in collection('xml_files?select=*.xml')//s
             return 
                 for $w in $s/w
+                    let $has-occurence := (lower-case(normalize-space($w/text())) eq 'has')
                     return
-                        if(lower-case(normalize-space($w/text())) eq 'has')
+                        if($has-occurence)
                             then 
                                 let $successor := (data($s/w[.>> $w][1]))
                                 return 
