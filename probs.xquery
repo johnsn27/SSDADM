@@ -2,26 +2,29 @@
     <body>
     <table>
     <tr>
-    <th>Target</th>
-    <th>Successor</th>
-    <th>Probability</th>
+    <th><i>Target</i></th>
+    <th><i>Successor</i></th>
+    <th><i>Probability</i></th>
     </tr>
     {
         let $list_of_successors := for $s in collection('xml_files?select=*.xml')//s
             return 
                 for $w in $s/w
+                    let $has-occurence := (lower-case(normalize-space($w/text())) eq 'has')
                     return
-                        if(lower-case(normalize-space($w/text())) eq 'has')
+                        if($has-occurence)
                             then 
+                                let $normalised-word := (lower-case(normalize-space($w/text())))
                                 let $successor := (data($s/w[.>> $w][1]))
+                                let $normalised-successor := (lower-case(normalize-space($successor)))
                                 return 
-                                    <list> { (lower-case(normalize-space($w/text()))) } {','} {(lower-case(normalize-space($successor))) }</list>
+                                    <list>{ $normalised-word } {','} { $normalised-successor }</list>
                             else()
                             
         let $words := for $s in collection('xml_files?select=*.xml')//s
             return
                 for $w in $s/w
-                    return <word>{ (lower-case(normalize-space($w/text()))) }</word>
+                    return <word>{ lower-case(normalize-space($w/text()))  }</word>
                
         for $distinct-value in distinct-values($list_of_successors/text())
             let $freqs := count($list_of_successors[text() = $distinct-value])

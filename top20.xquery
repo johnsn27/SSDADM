@@ -4,7 +4,7 @@
     <tr>
     <th><i>Target</i></th>
     <th><i>Successor</i></th>
-    <th><i>Probabality</i></th>
+    <th><i>Probability</i></th>
     </tr>
     {
         let $list_of_successors := for $s in collection('xml_files?select=*.xml')//s
